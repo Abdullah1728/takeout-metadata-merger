@@ -41,6 +41,8 @@ ExifTool must be available:
 - beside the executable
 - or in PATH
 
+Link: https://exiftool.org/
+
 ## License
 
 MIT

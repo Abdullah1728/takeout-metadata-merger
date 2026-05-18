@@ -2,6 +2,8 @@
 
 Restore takeout media metadata from JSON sidecars.
 
+Release [v0.6.0-beta](https://github.com/Abdullah1728/takeout-metadata-merger/releases/tag/v0.6.0-beta)
+
 Supports:
 - photos and videos
 - archives (.zip / .tar / .tgz)
@@ -10,11 +12,13 @@ Supports:
 - titles and descriptions
 - batch processing
 
-Preserves directory structure, existing files, and content root.
+Preserves directory structure, existing files,  and content root. Writes or updates only selected metadata fields. 
+
+Interactive in-app help (`?`)
 
 ## Status
 
-Beta release.
+Beta release tested with Google takeout photos.
 
 Metadata sidecar formats may vary between export providers.
 
@@ -23,6 +27,8 @@ If metadata is not detected correctly, open an issue with:
 - log files
 - archive layout
 - sample sidecar  (if possible)
+
+Planned updates include additional features, a GUI edition (separate commercial license), improved compatibility, and broader format support.
 
 ## Build
 
@@ -41,7 +47,7 @@ ExifTool must be available:
 - beside the executable
 - or in PATH
 
-Link: https://exiftool.org/
+ExifTool dependency: https://exiftool.org/
 
 ## License
 

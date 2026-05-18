@@ -20,15 +20,15 @@ jobs:
         include:
           - os: ubuntu-latest
             binary_name: metadata-merger
-            asset_name: Takeout-Metadata-Merger-linux
+            asset_name: metadata-merger-linux
 
           - os: windows-latest
             binary_name: metadata-merger.exe
-            asset_name: Takeout-Metadata-Merger-windows.exe
+            asset_name: metadata-merger-windows.exe
 
           - os: macos-latest
             binary_name: metadata-merger
-            asset_name: Takeout-Metadata-Merger-macos
+            asset_name: metadata-merger-macos
 
     runs-on: ${{ matrix.os }}
 

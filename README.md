@@ -49,6 +49,8 @@ ExifTool must be available:
 
 ExifTool dependency: https://exiftool.org/
 
+Windows: Extract ExifTool, rename `exiftool(-k).exe` to `exiftool.exe`, place it beside `metadata-merger.exe`, then run `metadata-merger.exe` from Terminal.
+
 ## License
 
 MIT

@@ -19,7 +19,7 @@ from tqdm import tqdm
 
 
 __app_name__ = "Takeout Metadata Merger"
-__version__  = "0.6.0-beta"
+__version__  = "0.7.0"
 
 _ET_BIN = "exiftool"
 _ET_ENV = None
@@ -1297,10 +1297,15 @@ def main() -> None:
                    if getattr(sys, "frozen", False) else Path(__file__).parent)
         et_name = "exiftool.exe" if is_win else "exiftool"
 
-        # Build a deduplicated candidate list (bundled binary first, then PATH)
-        # while preserving probe order.
-        _which  = _sh.which("exiftool")
-        raw     = [root / et_name] + ([Path(_which)] if _which else [])
+        if is_win:
+            _which_std = _sh.which("exiftool") or _sh.which("exiftool(-k)")
+            raw = [
+                root / "exiftool.exe",
+                root / "exiftool(-k).exe",
+            ] + ([Path(_which_std)] if _which_std else [])
+        else:
+            _which = _sh.which("exiftool")
+            raw    = [root / "exiftool"] + ([Path(_which)] if _which else [])
         seen, cands = set(), []
         for p in raw:
             key = str(p.resolve())
@@ -1313,7 +1318,8 @@ def main() -> None:
                 lib = p.parent / "lib"
                 if lib.is_dir(): env["PERL5LIB"] = str(lib)
                 v = subprocess.check_output(
-                    [str(p), "-ver"], text=True, env=env, timeout=10).strip()
+                    [str(p), "-ver"], text=True, env=env, timeout=10,
+                    stdin=subprocess.DEVNULL).strip()
                 return str(p), v, env, et_name
             except Exception:
                 continue
@@ -1596,6 +1602,28 @@ def main() -> None:
 # ── Entry point ────────────────────────────────────────────────────────────────
 
 if __name__ == "__main__":
+    # ── Windows: relaunch in a new console if started without one ─────────
+    # Covers double-click launches (no console attached).  The env-var guard
+    # prevents a relaunch loop; the child inherits the environment.
+    if os.name == "nt" and not os.environ.get("_TMM_CONSOLE_RELAUNCHED"):
+        import ctypes as _ctypes
+        if _ctypes.windll.kernel32.GetConsoleWindow() == 0:
+            os.environ["_TMM_CONSOLE_RELAUNCHED"] = "1"
+            _relaunch_cmd = (
+                [sys.executable] + sys.argv[1:]   # frozen .exe
+                if getattr(sys, "frozen", False)
+                else [sys.executable] + sys.argv  # normal .py run
+            )
+            subprocess.Popen(
+                _relaunch_cmd,
+                creationflags=subprocess.CREATE_NEW_CONSOLE,
+            )
+            sys.exit(0)
+
+    # Handle lightweight flags before any setup so they work even without
+    # ExifTool installed.
+    if len(sys.argv) > 1:
+        ...
     # Handle lightweight flags before any setup so they work even without
     # ExifTool installed.
     if len(sys.argv) > 1:

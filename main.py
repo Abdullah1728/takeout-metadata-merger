@@ -19,7 +19,7 @@ from tqdm import tqdm
 
 
 __app_name__ = "Takeout Metadata Merger"
-__version__  = "0.7.0"
+__version__  = "0.7.0-beta"
 
 _ET_BIN = "exiftool"
 _ET_ENV = None
